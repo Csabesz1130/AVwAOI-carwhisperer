@@ -1,0 +1,15 @@
+// Here is how you can import relations in this model: "import './[name].zmodel'"
+
+model CarTechnology {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  benefits    String[]
+  drawbacks   String[]
+  howItWorks  String
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@allow("all", true)
+}
