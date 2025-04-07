@@ -1,40 +1,71 @@
-# Welcome to Remix!
+# Car Whisperer - Jármű Egészségügyi Tanácsadó
 
-- 📖 [Remix docs](https://remix.run/docs)
+Az alkalmazás egy AI-alapú prediktív karbantartási és járműegészségügyi tanácsadó rendszer, amely segít a járművek állapotának monitorozásában és a karbantartási igények előrejelzésében.
 
-## Development
+## Főbb funkciók
 
-Run the dev server:
+- Jármű állapotának valós idejű monitorozása
+- Prediktív karbantartási javaslatok
+- Vezetési minták elemzése és optimalizálási javaslatok
+- Költségbecslések a javításokhoz
+- Testreszabott karbantartási ütemterv
 
-```shellscript
-npm run dev
+## Technológiai stack
+
+- Next.js 14
+- TypeScript
+- Prisma (adatbázis ORM)
+- Tailwind CSS
+- Recharts (adatvizualizáció)
+
+## Telepítés
+
+1. Klónozd le a repository-t:
+```bash
+git clone https://github.com/yourusername/car-whisperer.git
+cd car-whisperer
 ```
 
-## Deployment
-
-First, build your app for production:
-
-```sh
-npm run build
+2. Telepítsd a függőségeket:
+```bash
+pnpm install
 ```
 
-Then run the app in production mode:
-
-```sh
-npm start
+3. Állítsd be az adatbázis kapcsolatot:
+```bash
+cp .env.template .env
+# Szerkeszd a .env fájlt és add meg az adatbázis kapcsolati adatokat
 ```
 
-Now you'll need to pick a host to deploy it to.
+4. Futtasd az adatbázis migrációkat:
+```bash
+pnpm prisma migrate dev
+```
 
-### DIY
+5. Indítsd el a fejlesztői szervert:
+```bash
+pnpm dev
+```
 
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
+## Használat
 
-Make sure to deploy the output of `npm run build`
+1. Regisztrálj egy új fiókot
+2. Add hozzá járműveidet
+3. Kövesd a rendszer által generált karbantartási javaslatokat
+4. Figyeld a vezetési mintáidat és optimalizáld a vezetési stílusodat
 
-- `build/server`
-- `build/client`
+## Jövőbeli fejlesztések
 
-## Styling
+- OBD-II adatok integrálása
+- Javító műhelyek ajánló rendszere
+- Mobil alkalmazás
+- AI-alapú hibadiagnosztika
+- Jármű specifikus adatbázis bővítése
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
+## Közreműködés
+
+A projekt nyílt forráskódú, szívesen fogadunk pull requesteket. Kérjük, kövesd a CONTRIBUTING.md fájlban leírt irányelveket.
+
+## Licenc
+
+MIT
