@@ -167,6 +167,10 @@ export default function Index() {
       title: `Car Technologies`,
       link: `/car-technologies`,
     },
+    {
+      title: `AI Car Designer`,
+      link: `/ai-car-designer`,
+    },
   ]
 
   const packages = [
