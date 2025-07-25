@@ -1,7 +1,7 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { ExclamationTriangleIcon, InfoCircledIcon } from '@radix-ui/react-icons';
 import { useEffect, useState } from 'react';
 
 interface VehicleHealthData {
@@ -25,14 +25,22 @@ export function VehicleHealthDashboard({ vehicleId }: { vehicleId: string }) {
   const [healthData, setHealthData] = useState<VehicleHealthData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     const fetchHealthData = async () => {
       try {
         const response = await fetch(`/api/vehicles/${vehicleId}/health`);
+        
+        if (response.status === 404) {
+          setNotFound(true);
+          return;
+        }
+        
         if (!response.ok) {
           throw new Error('Nem sikerült betölteni az adatokat');
         }
+        
         const data = await response.json();
         setHealthData(data);
       } catch (err) {
@@ -46,7 +54,27 @@ export function VehicleHealthDashboard({ vehicleId }: { vehicleId: string }) {
   }, [vehicleId]);
 
   if (loading) {
-    return <div>Betöltés...</div>;
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Betöltés...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (notFound) {
+    return (
+      <Alert>
+        <InfoCircledIcon className="h-4 w-4" />
+        <AlertTitle>Adatok nem találhatók</AlertTitle>
+        <AlertDescription>
+          A megadott járműhöz nem találhatók egészségügyi adatok. 
+          Ellenőrizze a jármű azonosítóját, vagy futtassa a seed scriptet a demo adatok létrehozásához.
+        </AlertDescription>
+      </Alert>
+    );
   }
 
   if (error) {
@@ -141,15 +169,25 @@ export function VehicleHealthDashboard({ vehicleId }: { vehicleId: string }) {
 
       <div className="space-y-4">
         <h2 className="text-2xl font-bold">Ajánlott karbantartások</h2>
-        {healthData.recommendations.map((rec, index) => (
-          <Alert key={index} variant={rec.priority === 'Magas' ? 'destructive' : 'default'}>
-            <AlertTitle>{rec.component}</AlertTitle>
+        {healthData.recommendations.length === 0 ? (
+          <Alert>
+            <InfoCircledIcon className="h-4 w-4" />
+            <AlertTitle>Nincs sürgős karbantartás</AlertTitle>
             <AlertDescription>
-              <p>{rec.action}</p>
-              <p className="font-semibold mt-1">Becsült költség: {rec.estimatedCost}</p>
+              A jármű jelenleg jó állapotban van. Folytassa a rendszeres karbantartást.
             </AlertDescription>
           </Alert>
-        ))}
+        ) : (
+          healthData.recommendations.map((rec, index) => (
+            <Alert key={index} variant={rec.priority === 'Magas' ? 'destructive' : 'default'}>
+              <AlertTitle>{rec.component}</AlertTitle>
+              <AlertDescription>
+                <p>{rec.action}</p>
+                <p className="font-semibold mt-1">Becsült költség: {rec.estimatedCost}</p>
+              </AlertDescription>
+            </Alert>
+          ))
+        )}
       </div>
     </div>
   );

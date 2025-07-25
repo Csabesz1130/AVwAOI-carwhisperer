@@ -9,8 +9,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 enum UserStatus {
@@ -58,7 +58,7 @@ model Car {
   description     String?
   emissionsRating String?
   fuelEfficiency  String?
-  ecoFeatures     String[]
+  ecoFeatures     String
   cargoSpace      Float?
   seatingCapacity Int?
   safetyRating    Float?
@@ -93,7 +93,7 @@ model QuestionnaireResponse {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
   userId    String
-  responses Json     @default("{}")
+  responses String   @default("{}")
   user      User     @relation(fields: [userId], references: [id], name: "user")
 }
 
@@ -183,8 +183,8 @@ model CarTechnology {
   description String
   imageUrl    String?
   howItWorks  String
-  benefits    String[]
-  drawbacks   String[]
+  benefits    String
+  drawbacks   String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt()
 }
@@ -199,6 +199,8 @@ model VehicleData {
   lastOilChange   DateTime
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
+  userId          String?
+  user            User?             @relation("user", fields: [userId], references: [id])
   maintenanceEvents MaintenanceEvent[]
   drivingPatterns   DrivingPattern[]
 }

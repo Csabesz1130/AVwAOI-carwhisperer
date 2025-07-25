@@ -1,3 +1,5 @@
+import { Database } from '@/core/database';
+
 interface VehicleData {
   id: string;
   make: string;
@@ -30,17 +32,10 @@ interface DrivingPattern {
 }
 
 export class PredictiveMaintenanceModel {
-  private prisma: any;
+  private prisma: typeof Database;
 
   constructor() {
-    this.prisma = {
-      vehicleData: {
-        findUnique: async (params: any) => {
-          // Ideiglenes implementáció
-          return null;
-        }
-      }
-    };
+    this.prisma = Database;
   }
 
   // Jármű adatainak elemzése és predikciók generálása
@@ -54,7 +49,7 @@ export class PredictiveMaintenanceModel {
     });
 
     if (!vehicle) {
-      throw new Error('Jármű nem található');
+      return { error: 'Jármű nem található' };
     }
 
     // Alapvető predikciók
@@ -80,29 +75,30 @@ export class PredictiveMaintenanceModel {
     // Egyszerű heurisztikus modell a kezdeti fázisban
     const ageInYears = (new Date().getTime() - new Date(vehicle.manufactureDate).getTime()) / (1000 * 60 * 60 * 24 * 365);
     const baseHealth = 100 - (ageInYears * 10);
-    return Math.max(0, baseHealth);
+    return Math.max(0, Math.min(100, baseHealth));
   }
 
   private predictBrakeWear(vehicle: VehicleData) {
     // Fékek kopásának becslése a vezetési minták alapján
-    const aggressiveBrakingCount = vehicle.drivingPatterns.filter(
-      pattern => pattern.aggressiveBrakingCount
-    ).length;
+    const aggressiveBrakingCount = vehicle.drivingPatterns.reduce(
+      (sum, pattern) => sum + pattern.aggressiveBrakingCount,
+      0
+    );
     
-    return Math.min(100, (aggressiveBrakingCount * 2));
+    return Math.min(100, Math.max(0, (aggressiveBrakingCount * 2)));
   }
 
   private predictTransmissionHealth(vehicle: VehicleData) {
     // Váltó állapotának becslése a futásteljesítmény alapján
     const mileageFactor = vehicle.mileage / 100000;
-    return Math.max(0, 100 - (mileageFactor * 5));
+    return Math.max(0, Math.min(100, 100 - (mileageFactor * 5)));
   }
 
   private predictOilLife(vehicle: VehicleData) {
     // Olaj élettartamának becslése
     const lastOilChange = vehicle.lastOilChange;
     const daysSinceChange = (new Date().getTime() - new Date(lastOilChange).getTime()) / (1000 * 60 * 60 * 24);
-    return Math.max(0, 100 - (daysSinceChange / 30));
+    return Math.max(0, Math.min(100, 100 - (daysSinceChange / 30)));
   }
 
   private predictTireWear(vehicle: VehicleData) {
@@ -112,7 +108,7 @@ export class PredictiveMaintenanceModel {
       (sum, pattern) => sum + pattern.aggressiveCorneringCount,
       0
     );
-    return Math.min(100, (mileageFactor * 20) + (aggressiveCornering * 0.1));
+    return Math.min(100, Math.max(0, (mileageFactor * 20) + (aggressiveCornering * 0.1)));
   }
 
   private calculateRiskScore(predictions: {
@@ -130,10 +126,10 @@ export class PredictiveMaintenanceModel {
       tireWear: 0.2
     };
 
-    return Object.entries(predictions).reduce(
+    return Math.min(100, Object.entries(predictions).reduce(
       (score, [key, value]) => score + value * weights[key as keyof typeof weights],
       0
-    );
+    ));
   }
 
   private generateRecommendations(predictions: {
@@ -187,6 +183,16 @@ export class PredictiveMaintenanceModel {
         priority: 'Magas',
         action: 'Gumiabroncsok cseréje ajánlott',
         estimatedCost: '40,000 - 200,000 Ft/gumi'
+      });
+    }
+
+    // Default recommendation when overall risk is high but no specific component triggers
+    if (riskScore > 70 && recommendations.length === 0) {
+      recommendations.push({
+        component: 'Általános állapotfelmérés',
+        priority: 'Közepes',
+        action: 'Részletes műszaki vizsgálat ajánlott',
+        estimatedCost: '20,000 - 50,000 Ft'
       });
     }
 
