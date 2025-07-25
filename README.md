@@ -42,7 +42,12 @@ cp .env.template .env
 pnpm prisma migrate dev
 ```
 
-5. Indítsd el a fejlesztői szervert:
+5. Futtasd a seed scriptet a demo adatok létrehozásához:
+```bash
+pnpm run seed:vehicle-data
+```
+
+6. Indítsd el a fejlesztői szervert:
 ```bash
 pnpm dev
 ```
@@ -53,6 +58,20 @@ pnpm dev
 2. Add hozzá járműveidet
 3. Kövesd a rendszer által generált karbantartási javaslatokat
 4. Figyeld a vezetési mintáidat és optimalizáld a vezetési stílusodat
+
+## Legutóbbi fejlesztések
+
+### Prediktív karbantartási rendszer javítása
+- **Valós adatbázis kapcsolat**: A PredictiveMaintenanceModel most már a valós adatbázist használja a dummy Prisma client helyett
+- **Hibakezelés javítása**: A rendszer most már 404-es hibát ad vissza, ha a jármű nem található
+- **Adatbázis optimalizáció**: A driving patterns API most már a megosztott Database példányt használja
+- **Seed adatok**: Demo jármű adatok és vezetési minták létrehozása a teszteléshez
+
+### UI/UX fejlesztések
+- **Jobb hibakezelés**: A frontend komponensek most már kezelik a 404-es válaszokat
+- **Továbbfejlesztett grafikonok**: A vezetési minták grafikon most már tartalmazza a megtett távolságot is
+- **Reszponzív design**: A grafikonok most már reszponzívak és jobban néznek ki
+- **Intelligens javaslatok**: A rendszer most már kontextuális javaslatokat ad a vezetési minták alapján
 
 ## Jövőbeli fejlesztések
 

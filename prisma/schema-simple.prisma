@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model VehicleData {
+  id              String            @id @default(cuid())
+  make            String
+  model           String
+  year            Int
+  mileage         Float
+  manufactureDate DateTime
+  lastOilChange   DateTime
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  maintenanceEvents MaintenanceEvent[]
+  drivingPatterns   DrivingPattern[]
+}
+
+model MaintenanceEvent {
+  id          String      @id @default(cuid())
+  vehicleId   String
+  vehicle     VehicleData @relation(fields: [vehicleId], references: [id])
+  type        String
+  description String
+  cost        Float?
+  date        DateTime
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model DrivingPattern {
+  id                      String      @id @default(cuid())
+  vehicleId               String
+  vehicle                 VehicleData @relation(fields: [vehicleId], references: [id])
+  date                    DateTime
+  aggressiveBrakingCount  Int         @default(0)
+  aggressiveCorneringCount Int        @default(0)
+  averageSpeed           Float
+  distanceTraveled       Float
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @updatedAt
+}

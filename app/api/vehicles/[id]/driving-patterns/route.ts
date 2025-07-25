@@ -1,14 +1,12 @@
-import { PrismaClient } from '@prisma/client';
+import { Database } from '@/core/database';
 import { NextResponse } from 'next/server';
-
-const prisma = new PrismaClient();
 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    const patterns = await prisma.drivingPattern.findMany({
+    const patterns = await Database.drivingPattern.findMany({
       where: {
         vehicleId: params.id
       },
