@@ -1,0 +1,16 @@
+{
+  "name": "CarWhisperer",
+  "short_name": "CarWhisperer",
+  "description": "Your car companion app",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/pwa/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

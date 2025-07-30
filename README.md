@@ -12,11 +12,12 @@ Az alkalmazás egy AI-alapú prediktív karbantartási és járműegészségügy
 
 ## Technológiai stack
 
-- Next.js 14
+- Remix (React framework)
 - TypeScript
 - Prisma (adatbázis ORM)
 - Tailwind CSS
 - Recharts (adatvizualizáció)
+- Vite (build tool)
 
 ## Telepítés
 
@@ -33,7 +34,7 @@ pnpm install
 
 3. Állítsd be az adatbázis kapcsolatot:
 ```bash
-cp .env.template .env
+cp .env.example .env
 # Szerkeszd a .env fájlt és add meg az adatbázis kapcsolati adatokat
 ```
 
@@ -51,6 +52,32 @@ pnpm run seed:vehicle-data
 ```bash
 pnpm dev
 ```
+
+## Deployment (Vercel)
+
+### Előfeltételek
+- Vercel fiók
+- PostgreSQL adatbázis (Vercel Postgres vagy külső szolgáltató)
+- Környezeti változók beállítása
+
+### Környezeti változók
+A következő környezeti változókat kell beállítani a Vercel projektben:
+
+```bash
+DATABASE_URL="postgresql://username:password@host:port/database"
+NODE_ENV="production"
+```
+
+### Deployment lépések
+1. Csatlakoztasd a GitHub repository-t a Vercel-hez
+2. Állítsd be a környezeti változókat a Vercel projekt beállításaiban
+3. A `vercel.json` fájl automatikusan konfigurálja a build folyamatot
+4. A Prisma client automatikusan generálódik a build során
+
+### Fontos megjegyzések
+- **Adatbázis**: SQLite nem támogatott Vercel-en. Használj PostgreSQL-t production környezetben.
+- **Build idő**: A build folyamat maximum 30 másodpercig tarthat.
+- **PWA**: Az alkalmazás PWA funkciókkal rendelkezik, a manifest fájl automatikusan generálódik.
 
 ## Használat
 
