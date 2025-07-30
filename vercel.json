@@ -1,0 +1,27 @@
+{
+  "buildCommand": "pnpm run build",
+  "outputDirectory": "build/client",
+  "installCommand": "pnpm install",
+  "devCommand": "pnpm run dev",
+  "functions": {
+    "build/server/index.js": {
+      "runtime": "@vercel/node@1"
+    }
+  },
+  "routes": [
+    {
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1",
+      "headers": {
+        "cache-control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/build/server/index.js"
+    }
+  ]
+}
