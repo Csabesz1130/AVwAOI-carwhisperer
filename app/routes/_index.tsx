@@ -164,6 +164,10 @@ export default function Index() {
       onClick: () => scrollToSection('faq'),
     },
     {
+      title: `Demo`,
+      link: `/demo`,
+    },
+    {
       title: `Car Technologies`,
       link: `/car-technologies`,
     },
