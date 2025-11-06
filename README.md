@@ -20,37 +20,49 @@ Az alkalmazás egy AI-alapú prediktív karbantartási és járműegészségügy
 
 ## Telepítés
 
+### Gyors telepítés (ajánlott)
+
+```bash
+pnpm run setup
+```
+
+Ez a parancs automatikusan ellenőrzi a Node.js verziót, telepíti a függőségeket, létrehozza a `.env` fájlt (ha hiányzik), lefuttatja a Prisma schema szinkronizálást és feltölti a demó adatokat.
+
+### Manuális telepítés
+
 1. Klónozd le a repository-t:
-```bash
-git clone https://github.com/yourusername/car-whisperer.git
-cd car-whisperer
-```
-
+   ```bash
+   git clone https://github.com/yourusername/car-whisperer.git
+   cd car-whisperer
+   ```
 2. Telepítsd a függőségeket:
-```bash
-pnpm install
-```
-
-3. Állítsd be az adatbázis kapcsolatot:
-```bash
-cp .env.template .env
-# Szerkeszd a .env fájlt és add meg az adatbázis kapcsolati adatokat
-```
-
-4. Futtasd az adatbázis migrációkat:
-```bash
-pnpm prisma migrate dev
-```
-
-5. Futtasd a seed scriptet a demo adatok létrehozásához:
-```bash
-pnpm run seed:vehicle-data
-```
-
+   ```bash
+   pnpm install
+   ```
+3. Hozd létre a környezeti változókat:
+   ```bash
+   cp .env.template .env
+   # majd töltsd ki a hiányzó értékeket
+   ```
+4. Generáld a Prisma klienst és szinkronizáld az adatbázist (SQLite):
+   ```bash
+   pnpm exec prisma generate
+   pnpm exec prisma db push
+   ```
+5. Töltsd fel a demó adatokat:
+   ```bash
+   pnpm run db:seed
+   ```
 6. Indítsd el a fejlesztői szervert:
-```bash
-pnpm dev
-```
+   ```bash
+   pnpm dev
+   ```
+
+### Hasznos adatbázis parancsok
+
+- `pnpm run db:seed`: demó adatok újratöltése (idempotens)
+- `pnpm run db:reset`: SQLite adatbázis törlése, újraszinkronizálása és újratöltése demó adatokkal
+- `pnpm run seed:vehicle-data`: visszafelé kompatibilis alias, ugyanazt futtatja mint a `db:seed`
 
 ## Használat
 
